@@ -14,21 +14,21 @@ interface CurrentUser {
 }
 
 type ContextType = {
-  currentUser: CurrentUser;
+  currentUser: CurrentUser | null;
   login: (loginData: ILoginData) => Promise<any>;
-  logout: () => Promise<void>;
+  logout: () => Promise<void> | true;
 };
 
 const baseUrl = `${SERVER_URL}/api/admin`;
-const initUserState = {
-  accessToken: '',
-  id: '123', // TODO: implement auth feature
-};
 
 const AuthContext = React.createContext<ContextType | null>(null);
 
+const demoLogin = {
+  id: '123',
+  accessToken: 'xyz',
+}
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [currentUser, setCurrentUser] = useState<CurrentUser>(initUserState);
+  const [currentUser, setCurrentUser] = useState<CurrentUser | null>(demoLogin);
   const [loading, setLoading] = useState(true);
   const [cookies, setCookie] = useCookies(['itpAdminToken']);
 
@@ -51,6 +51,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const logout = () => {
+    if (!currentUser) return true;
     const request = axios
       .delete(`${baseUrl}/logout/${currentUser.accessToken}`)
       .then((res) => {
@@ -76,11 +77,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         console.log(response?.data?.message);
         setLoading(false);
       });
-
-    return () => {
-      setLoading(true);
-      setCurrentUser(initUserState);
-    };
   }, [cookies]);
 
   const value = {

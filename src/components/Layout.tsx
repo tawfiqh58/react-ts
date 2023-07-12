@@ -5,9 +5,9 @@ export default function Layout() {
   return (
     <div>
       {/* side and navbar */}
-      <body>
+      <div>
         <Outlet />
-      </body>
+      </div>
       {/* footer */}
     </div>
   );

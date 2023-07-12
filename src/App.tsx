@@ -13,17 +13,13 @@ function App() {
       <Routes>
         <Route
           path="/"
-          element={
-            context?.currentUser?.id ? <Layout /> : <Navigate to="/login" />
-          }
+          element={context?.currentUser ? <Layout /> : <Navigate to="/login" />}
         >
           <Route path="" element={<HomeView />} />
         </Route>
         <Route
           path="/login"
-          element={
-            context?.currentUser?.id ? <Navigate to="/" /> : <LoginView />
-          }
+          element={context?.currentUser ? <Navigate to="/" /> : <LoginView />}
         />
       </Routes>
     </BrowserRouter>
